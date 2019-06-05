@@ -46,7 +46,7 @@ export default class SearchSection extends React.Component {
     
     componentDidMount() {
         axios.get('https://api.themoviedb.org/3/authentication/token/new?api_key=6ed12e064b90ae1290fa326ce9e790ff').then(res => {
-            axios.get(`https://www.themoviedb.org/authenticate/${res.data.request_token}?redirect_to=http://www.yourapp.com/approved`).then(res => {
+            axios.get(`https://www.themoviedb.org/authenticate/${res.data.request_token}?redirect_to=https://jumbo-tech-test.herokuapp.com/approved`).then(res => {
                 console.log(res)
             })
         })
