@@ -35,29 +35,28 @@ const SearchButton = styled.button`
 
 const SearchIcon = styled.img`
 `
+
+// function keyUpHandler(SearchInput, e) {
+//     debugger;
+// }
 export default class SearchSection extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            input: null,
-            movies: null
+            searchInput: null
         };
     }
-    
-    componentDidMount() {
-        axios.get('https://api.themoviedb.org/3/authentication/token/new?api_key=6ed12e064b90ae1290fa326ce9e790ff').then(res => {
-            axios.get(`https://www.themoviedb.org/authenticate/${res.data.request_token}?redirect_to=https://jumbo-tech-test.herokuapp.com/approved`).then(res => {
-                console.log(res)
-            })
-        })
+
+    updateSearchInput(inputValue) {
+        this.setState({ searchInput: inputValue.target.value });
     }
-    
+
     render() {
         return (
             <SearchContainer>
                 <Logo src={logo} alt="main-logo"/>
                 <SearchBarContainer >
-                    <SearchBar type="search" placeholder="Search..." />
+                    <SearchBar type="search" placeholder="Search..." onChange={inputValue => this.updateSearchInput(inputValue)} />
                     <SearchButton>
                         <SearchIcon src={searchIcon} alt="search-icon"/>
                     </SearchButton>
