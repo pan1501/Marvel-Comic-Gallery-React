@@ -54,6 +54,9 @@ const DetailSection = styled("div")(({ url }) => `
     align-items: center;
     justify-content: center;
     padding-left: 18px;
+    @media only screen and (max-width: 414px) {
+        align-items: baseline;
+    }
 `)
 
 
