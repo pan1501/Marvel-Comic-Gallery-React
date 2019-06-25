@@ -2,6 +2,7 @@ import React from "react";
 import axios from 'axios';
 import styled from "@emotion/styled";
 import moment from "moment";
+import { BrowserRouter as Router, Route, Link } from "react-router-dom"
 
 const MoviesContainer = styled("div")`
     display: grid;
@@ -69,54 +70,53 @@ export default class PopulerMovieSection extends React.Component {
         };
     }
   
-    componentDidMount() {
+    componentWillMount() {
         axios.get("https://api.themoviedb.org/3/movie/popular?api_key=6ed12e064b90ae1290fa326ce9e790ff&language=en-US").then(res => {
-            this.setState({ movies: res.data.results })
+            this.setState({ movies: res.data.results });
         })
     }
  
     RenderMovies = (movies, searchedValue) => {
         let eachMovie = null;
-    
-        if (movies !== null) {
-            eachMovie = movies.map((movie) => {
-                if (searchedValue === null || movie.title.includes(searchedValue)) {
-                    const score = +movie.vote_average * 10;
-                    movie.user_score = score;
+        if (!movies) return;
+        eachMovie = movies.map((movie) => {
+            if (searchedValue === null || movie.title.includes(searchedValue)) {
+                const score = +movie.vote_average * 10;
+                movie.user_score = score;
 
-                    let colorClass = "green";
-        
-                    if (score < 70) {
-                        colorClass = "purple";
-                    }
-                    if (score < 50) {
-                        colorClass = "red";
-                    }
-        
-                    const dateFormat = moment(movie.release_date, "YYYY-MM-DD").format("MMM YYYY")
-        
-                   return (
-                    <MovieContainer key={movie.title}>
-                        <MovieBackground
-                            onClick={() => {
-                                this.setState({ renderDetails: true });
-                                this.setState({ movieClicked: movie.title });
-                                this.props.showDetailStatusCallBack(true, movie)
-                            }}
-                            url={movie.poster_path}>
-                            <Score className={colorClass}>{`${score}%`}</Score>
-                        </MovieBackground>
-                        <MovieTitle>
-                            {movie.title}
-                        </MovieTitle>
-                        <MovieDate>
-                            {dateFormat}
-                        </MovieDate>
-                    </MovieContainer>
-                   )
+                let colorClass = "green";
+    
+                if (score < 70) {
+                    colorClass = "purple";
                 }
-            });
-        }
+                if (score < 50) {
+                    colorClass = "red";
+                }
+    
+                const dateFormat = moment(movie.release_date, "YYYY-MM-DD").format("MMM YYYY");
+                return (
+                    <MovieContainer key={movie.title}>
+                        <Link to={`/${movie.id}`}>
+                            <MovieBackground
+                                onClick={() => {
+                                    this.setState({ renderDetails: true });
+                                    this.setState({ movieClicked: movie.title });
+                                    this.props.showDetailStatusCallBack(true, movie)
+                                }}
+                                url={movie.poster_path}>
+                                <Score className={colorClass}>{`${score}%`}</Score>
+                            </MovieBackground>
+                            <MovieTitle>
+                                {movie.title}
+                            </MovieTitle>
+                            <MovieDate>
+                                {dateFormat}
+                            </MovieDate>
+                        </Link>
+                    </MovieContainer>
+                )
+            }
+        });
     
         return (eachMovie);
     }
