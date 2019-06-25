@@ -11,7 +11,6 @@ const MoviesContainer = styled("div")`
     margin-top: 12px;
 `
 const MovieContainer = styled("div")`
-    height: 300px;
 `
 
 const MovieBackground = styled("div")(({ url }) => `
@@ -44,7 +43,7 @@ const Score = styled("div")`
     top: 4px;
     left: 4px;
     position: relative;
-
+    text-align: center;
 `
 const MovieTitle = styled("div")`
     margin-top:12px;
