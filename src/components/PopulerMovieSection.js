@@ -2,7 +2,7 @@ import React from "react";
 import axios from 'axios';
 import styled from "@emotion/styled";
 import moment from "moment";
-import { BrowserRouter as Router, Route, Link } from "react-router-dom"
+import { Route, Link } from "react-router-dom"
 
 const MoviesContainer = styled("div")`
     display: grid;
@@ -10,8 +10,6 @@ const MoviesContainer = styled("div")`
     grid-gap: 30px;
     justify-content: baseline;
     margin-top: 12px;
-`
-const MovieContainer = styled("div")`
 `
 
 const MovieBackground = styled("div")(({ url }) => `
@@ -80,6 +78,7 @@ export default class PopulerMovieSection extends React.Component {
         let eachMovie = null;
         if (!movies) return;
         eachMovie = movies.map((movie) => {
+            var render;
             if (searchedValue === null || movie.title.includes(searchedValue)) {
                 const score = +movie.vote_average * 10;
                 movie.user_score = score;
@@ -94,15 +93,10 @@ export default class PopulerMovieSection extends React.Component {
                 }
     
                 const dateFormat = moment(movie.release_date, "YYYY-MM-DD").format("MMM YYYY");
-                return (
-                    <MovieContainer key={movie.title}>
-                        <Link to={`/${movie.id}`}>
+                render = <Route key={movie.title} exact path={`/`}  render={() => (
+                    <div >
+                        <Link to={`/movies/${movie.id}`}>
                             <MovieBackground
-                                onClick={() => {
-                                    this.setState({ renderDetails: true });
-                                    this.setState({ movieClicked: movie.title });
-                                    this.props.showDetailStatusCallBack(true, movie)
-                                }}
                                 url={movie.poster_path}>
                                 <Score className={colorClass}>{`${score}%`}</Score>
                             </MovieBackground>
@@ -113,9 +107,10 @@ export default class PopulerMovieSection extends React.Component {
                                 {dateFormat}
                             </MovieDate>
                         </Link>
-                    </MovieContainer>
-                )
+                    </div>
+                )}/>
             }
+            return render;
         });
     
         return (eachMovie);

@@ -4,7 +4,7 @@ import axios from 'axios';
 import moment from "moment";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import { Route, Link, useParams } from "react-router-dom";
 
 const Background = styled("div")(({ url }) => `
     background-image: url(https://image.tmdb.org/t/p/original${url});
@@ -92,7 +92,8 @@ export default class MovieDetailSection extends React.Component {
     }
 
     componentDidMount() {
-        axios.get(`https://api.themoviedb.org/3/movie/${this.props.selectedMovie.id}?api_key=6ed12e064b90ae1290fa326ce9e790ff&language=en-US`).then(res => {
+        let movieId = window.location.pathname.split("/")[2];
+        axios.get(`https://api.themoviedb.org/3/movie/${movieId}?api_key=6ed12e064b90ae1290fa326ce9e790ff&language=en-US`).then(res => {
             this.setState({ movieDetail: res.data })
         })
     }
@@ -105,13 +106,11 @@ export default class MovieDetailSection extends React.Component {
             const release_year = moment(movieDetail.release_date, "YYYY-MM-DD").format("YYYY")
             const runtimeHours = Math.floor(movieDetail.runtime/60);
             const runtimeMin = Math.floor((movieDetail.runtime/60 - runtimeHours) * 60)
-            details =  <Route exact path={`/${movieDetail.id}`} render={() => (
+            details =  <Route exact path={`/movies/${movieDetail.id}`} render={() => (
             <div>
                 <Background url={movieDetail.backdrop_path}/>
                 <Link to="/">
-                    <BackButton onClick={() => {
-                        this.props.showDetailStatusCallBack(false, null, null)
-                    }}>
+                    <BackButton>
                         <FontAwesomeIcon icon={faArrowLeft}/>
                     </BackButton>
                 </Link>
